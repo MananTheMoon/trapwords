@@ -1,0 +1,24 @@
+{
+  "name": "trapwords",
+  "version": "1.0.0",
+  "description": "Backend for trapwords web app",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MananTheMoon/trapwords.git"
+  },
+  "author": "Manan Thakkar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MananTheMoon/trapwords/issues"
+  },
+  "homepage": "https://github.com/MananTheMoon/trapwords#readme",
+  "dependencies": {
+    "axios": "^0.24.0",
+    "express": "^4.17.1",
+    "socket.io": "^4.4.0"
+  }
+}
