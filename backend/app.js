@@ -11,6 +11,16 @@ const io = new Server(server, {cors: {
 
 const port = process.env.PORT || 5000;
 
+const path = require("path");
+// Serve static files from the React frontend app
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.get("*", function (req, res) {
+  res.sendFile("index.html", {
+    root: path.join(__dirname, "../frontend/build"),
+  });
+});
+
+
 let interval;
 
 let gameData = {
