@@ -13,64 +13,78 @@ const port = process.env.PORT || 5000;
 
 let interval;
 
-let wavelengthData = {
-  activeTeam: "admin",
-  dialAngle: 0,
-  targetRange: 0,
-  covered: true,
-  prompt: {
-    left: "Left",
-    right: "right",
-  },
-  teams: {
-    team1: {
-      name: "Team 1",
-      score: 0,
-      position: "left", // or right or center
-      shown: true,
+let gameData = {
+  teamData: {
+    "1": {
+      word: "start",
+      trapCount: 3,
+      traps: {
+        "2": {
+          0: "begin",
+          1: ""
+        },
+        "3": {
+          0: "initial",
+          2: "yupperss",
+        },
+      },
     },
-    team2: {
-      name: "Team 2",
-      score: 0,
-      position: "left", // or right or center
-      shown: true,
+    "2": {
+      word: "happiness",
+      trapCount: 3,
+      traps: {
+        "3": {
+          1: "interest",
+          2: "stuff",
+        },
+      },
     },
-    team3: {
-      name: "Team 3",
-      score: 0,
-      position: "right", // or right or center
-      shown: true,
+    "3": {
+      word: "cool",
+      trapCount: 3,
+      traps: {
+        "2": {
+          1: "interest",
+          2: "stuff",
+        },
+      },
     },
-    team4: {
-      name: "Team 4",
-      score: 0,
-      position: "right", // or right or center
-      shown: false,
+    "4": {
+      word: "interest",
+      trapCount: 3,
+      traps: {
+        "3": {
+          1: "cool",
+          2: "jump",
+        },
+      },
     },
   },
 };
 
-let players = {};
-
 const sendGameData = async (socket = null) => {
   if (socket) {
     console.log("Sending GameData to most");
-    socket.broadcast.emit("wavelengthData", wavelengthData);
+    socket.broadcast.emit("gameData", gameData);
   } else {
     console.log("Sending Game Data to all");
-    io.emit("wavelengthData", wavelengthData);
+    io.emit("gameData", gameData);
   }
 };
 
 io.on("connection", (socket) => {
   console.log("New client connected");
-  socket.emit("listPlayers", players);
   sendGameData();
 
   if (interval) {
     clearInterval(interval);
   }
 
+  socket.on("updateGameData", (newData) => {
+    console.log("One client wants to update game data!")
+    gameData = newData
+    sendGameData(socket)
+  })
   
 });
 

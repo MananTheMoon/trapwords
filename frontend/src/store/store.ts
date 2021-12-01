@@ -4,10 +4,23 @@ import {
 } from "redux";
 import { Socket, io } from "socket.io-client";
 import { getType } from "typesafe-actions";
-import { addSocket, IActions } from "./actions";
+import { addSocket, addTrap, IActions, updateGameData } from "./actions";
 import { server_url } from "../consts";
+import _ from "lodash";
 
-export interface ITrapwordsData {}
+export interface ITrapwordsData {
+  teamData: {
+    [key: string]: {
+      word?: string;
+      trapCount: number;
+      traps: {
+        [key: string]: {
+          [key: number]: string;
+        };
+      };
+    };
+  };
+}
 
 export interface IState {
   socket?: Socket;
@@ -15,26 +28,61 @@ export interface IState {
 }
 
 const emptyStore: IState = {
-  trapwordsData: {},
+  trapwordsData: {
+    teamData: {},
+  },
 };
 
-function game(state: IState = emptyStore, action: IActions) {
+function game(state: IState = emptyStore, action: IActions): IState {
   switch (action.type) {
     case getType(addSocket):
       return {
         ...state,
         socket: action.payload,
       };
+    case getType(addTrap):
+      const trapwordsDataToMerge = {
+        teamData: {
+          [action.payload.targetTeam]: {
+            traps: {
+              [action.payload.fromTeam]: {
+                [action.payload.index]: action.payload.word,
+              },
+            },
+          },
+        },
+      };
+      const updatedTrapwordsData = _.merge(
+        trapwordsDataToMerge,
+        state.trapwordsData
+      );
+      updatedTrapwordsData.teamData[action.payload.targetTeam].traps[
+        action.payload.fromTeam
+      ][action.payload.index] = action.payload.word;
+      if (state.socket) {
+        // TODO (Manan) - Move socket emitter elsewhere
+        state.socket?.emit("updateGameData", updatedTrapwordsData);
+      }
+
+      return {
+        ...state,
+        trapwordsData: updatedTrapwordsData,
+      };
+    case getType(updateGameData):
+      console.log("New data payload!!", action.payload);
+      return {
+        ...state,
+        trapwordsData: action.payload,
+      };
+    default:
+      return state;
   }
-  return state;
 }
 
 export const createStore = () => {
-  console.log("Here...f.");
   const store = reduxCreateStore(game);
   const socket = io(server_url).connect();
-  // console.log("Added socket", socket);
-  // store.dispatch(addSocket(socket));
+  store.dispatch(addSocket(socket));
   return store;
 };
 
