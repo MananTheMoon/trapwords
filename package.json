@@ -1,11 +1,10 @@
 {
-    "name": "backend",
-    "version": "1.0.0",
-    "main": "index.js",
-    "license": "MIT",
-    "scripts": {
-      "start": "node backend/app.js",
-      "heroku-postbuild": "cd frontend && npm install && npm run build"
-    }
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node backend/app.js",
+    "heroku-postbuild": "cd frontend && npm install && npm run build"
   }
-  
+}
