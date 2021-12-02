@@ -11,6 +11,7 @@ import {
   IActions,
   setScore,
   setTrapCount,
+  setTrapsEditable,
   setWord,
   updateGameData,
 } from "./actions";
@@ -18,6 +19,7 @@ import { server_url } from "../consts";
 import _ from "lodash";
 
 export interface ITrapwordsData {
+  trapsEditable: boolean;
   teamData: {
     [key: string]: {
       score: number;
@@ -39,6 +41,7 @@ export interface IState {
 
 const emptyStore: IState = {
   trapwordsData: {
+    trapsEditable: true,
     teamData: {},
   },
 };
@@ -159,6 +162,15 @@ function game(state: IState = emptyStore, action: IActions): IState {
       return {
         ...state,
         trapwordsData: updateData3,
+      };
+    case getType(setTrapsEditable):
+      state.socket?.emit("setTrapsEditable", action.payload);
+      return {
+        ...state,
+        trapwordsData: {
+          ...state.trapwordsData,
+          trapsEditable: action.payload,
+        },
       };
     default:
       return state;

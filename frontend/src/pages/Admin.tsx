@@ -9,6 +9,7 @@ import {
   clearTraps,
   setScore,
   setTrapCount,
+  setTrapsEditable,
   setWord,
 } from "../store/actions";
 import { Button } from "react-bootstrap";
@@ -26,14 +27,29 @@ export const AdminUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
       <div className="p-2">
         <p className="text-center h2">Admin</p>
         <hr />
-        <div>Section here for main stuff and buttons</div>
-        <Button
-          onClick={() => {
-            dispatch(clearTraps());
-          }}
-        >
-          Clear all Trap words
-        </Button>
+        <div className="d-flex flex-row justify-content-between">
+          <Button
+            onClick={() => {
+              dispatch(clearTraps());
+            }}
+          >
+            Clear all Trap words
+          </Button>
+          <Button
+            onClick={() => {
+              dispatch(setTrapsEditable(true));
+            }}
+          >
+            Unlock Trap Words
+          </Button>
+          <Button
+            onClick={() => {
+              dispatch(setTrapsEditable(false));
+            }}
+          >
+            Lock Trap Wordss
+          </Button>
+        </div>
         <hr />
         <div className="d-flex flex-row">
           {Object.keys(trapwordsData.teamData).map((targetTeam) => {
@@ -105,6 +121,7 @@ export const AdminUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                           const word = teamData.traps[fromTeam]?.[i];
                           return (
                             <TrapwordInput
+                              editable={trapwordsData.trapsEditable}
                               word={word}
                               onChange={(newWord) => {
                                 dispatch(

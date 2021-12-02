@@ -18,7 +18,7 @@ export const TeamUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
   if (!teamNumber) {
     return <div>Error</div>;
   }
-  const points = trapwordsData.teamData[teamNumber].score;
+  const points = trapwordsData.teamData[teamNumber]?.score || 0;
   return (
     <div className="d-flex flex-column pt-2">
       <div className="p-2">
@@ -45,6 +45,7 @@ export const TeamUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                     const word = teamData.traps[teamNumber]?.[i];
                     return (
                       <TrapwordInput
+                        editable={trapwordsData.trapsEditable}
                         key={`${targetTeam}-${teamNumber}-${i}`}
                         word={word}
                         onChange={(newWord) => {

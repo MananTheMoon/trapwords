@@ -24,6 +24,7 @@ app.get("*", function (req, res) {
 let interval;
 
 let gameData = {
+  trapesEditable: false,
   teamData: {
     "1": {
       word: "start",
@@ -132,6 +133,14 @@ io.on("connection", (socket) => {
         }
       },
     )
+    sendGameData(socket)
+  })
+
+  socket.on("setTrapsEditable", (payload) => {
+    gameData = {
+      ...gameData,
+      trapsEditable: payload
+    }
     sendGameData(socket)
   })
   
