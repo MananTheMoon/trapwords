@@ -4,7 +4,7 @@ import { IState, ITrapwordsData } from "../store/store";
 import { Socket } from "socket.io-client";
 import { TrapwordInput } from "../components/TrapwordInput";
 import { GameUpdater } from "../components/GameUpdater";
-import { addTrap, clearTraps, setWord } from "../store/actions";
+import { addTrap, clearTraps, setTrapCount, setWord } from "../store/actions";
 import { Button } from "react-bootstrap";
 
 interface ITeamProps {
@@ -57,6 +57,14 @@ export const AdminUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                     <input
                       type="number"
                       value={teamData.trapCount}
+                      onChange={(e) => {
+                        dispatch(
+                          setTrapCount({
+                            team: targetTeam,
+                            trapCount: Number(e.target.value),
+                          })
+                        );
+                      }}
                       min={1}
                       max={10}
                     />{" "}

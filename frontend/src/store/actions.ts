@@ -14,6 +14,8 @@ export const clearTraps = createAction("CLEAR_TRAPS")<void>();
 export const lockTraps = createAction("LOCK_TRAPS")<void>();
 export const setWord =
   createAction("SET_WORD")<{ team: string; word: string }>();
+export const setTrapCount =
+  createAction("SET_TRAP_COUNT")<{ team: string; trapCount: number }>();
 
 export type IActions =
   | ActionType<typeof addSocket>
@@ -21,4 +23,5 @@ export type IActions =
   | ActionType<typeof addTrap>
   | ActionType<typeof clearTraps>
   | ActionType<typeof lockTraps>
-  | ActionType<typeof setWord>;
+  | ActionType<typeof setWord>
+  | ActionType<typeof setTrapCount>;

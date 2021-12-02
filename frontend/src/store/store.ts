@@ -9,6 +9,7 @@ import {
   addTrap,
   clearTraps,
   IActions,
+  setTrapCount,
   setWord,
   updateGameData,
 } from "./actions";
@@ -88,7 +89,16 @@ function game(state: IState = emptyStore, action: IActions): IState {
               ...acc,
               [key]: {
                 ...state.trapwordsData.teamData[key],
-                traps: {},
+                traps: {
+                  ...Array.from(
+                    Array(state.trapwordsData.teamData[key].trapCount).keys()
+                  ).reduce((acc, i) => {
+                    return {
+                      ...acc,
+                      [i]: "",
+                    };
+                  }, {}),
+                },
               },
             };
           },
@@ -115,6 +125,22 @@ function game(state: IState = emptyStore, action: IActions): IState {
       return {
         ...state,
         trapwordsData: updatedData,
+      };
+    case getType(setTrapCount):
+      const updateData2 = {
+        ...state.trapwordsData,
+        teamData: {
+          ...state.trapwordsData.teamData,
+          [action.payload.team]: {
+            ...state.trapwordsData.teamData[action.payload.team],
+            trapCount: action.payload.trapCount,
+          },
+        },
+      };
+      state.socket?.emit("updateGameData", updateData2);
+      return {
+        ...state,
+        trapwordsData: updateData2,
       };
     default:
       return state;

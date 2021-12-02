@@ -127,7 +127,6 @@ io.on("connection", (socket) => {
           }
         }
       },
-      
     )
     sendGameData(socket)
   })
