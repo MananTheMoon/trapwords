@@ -117,6 +117,20 @@ io.on("connection", (socket) => {
     ][payload.index] = payload.word;
     sendGameData(socket)
   })
+  socket.on("setWord", (payload) => {
+    gameData = _.merge(
+      gameData,
+      {
+        teamData: {
+          [payload.team]: {
+            word: payload.word
+          }
+        }
+      },
+      
+    )
+    sendGameData(socket)
+  })
   
 });
 

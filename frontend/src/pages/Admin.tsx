@@ -1,11 +1,10 @@
 import React from "react";
-import { useParams } from "react-router";
 import { connect, useDispatch } from "react-redux";
 import { IState, ITrapwordsData } from "../store/store";
 import { Socket } from "socket.io-client";
 import { TrapwordInput } from "../components/TrapwordInput";
 import { GameUpdater } from "../components/GameUpdater";
-import { addTrap, clearTraps } from "../store/actions";
+import { addTrap, clearTraps, setWord } from "../store/actions";
 import { Button } from "react-bootstrap";
 
 interface ITeamProps {
@@ -39,6 +38,28 @@ export const AdminUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                   <div>Team {targetTeam}'s word is:</div>
                   <div className="h3 bg-warning p-1 rounded mx-2">
                     {teamData.word?.toUpperCase()}
+                  </div>
+                </div>
+                <div className="d-flex flex-row">
+                  Change Word:
+                  <input
+                    value={teamData.word}
+                    onChange={(e) => {
+                      dispatch(
+                        setWord({ team: targetTeam, word: e.target.value })
+                      );
+                    }}
+                  />
+                </div>
+                <div className="d-flex flex-row">
+                  <div>Trap Count:</div>
+                  <div className="w-25">
+                    <input
+                      type="number"
+                      value={teamData.trapCount}
+                      min={1}
+                      max={10}
+                    />{" "}
                   </div>
                 </div>
                 <hr />
