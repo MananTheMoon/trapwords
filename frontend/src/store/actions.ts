@@ -16,6 +16,10 @@ export const setWord =
   createAction("SET_WORD")<{ team: string; word: string }>();
 export const setTrapCount =
   createAction("SET_TRAP_COUNT")<{ team: string; trapCount: number }>();
+export const setScore =
+  createAction("SET_SCORE")<{ team: string; score: number }>();
+
+export const setTrapsEditable = createAction("SET_TRAPSS_EDITABLE")<boolean>();
 
 export type IActions =
   | ActionType<typeof addSocket>
@@ -24,4 +28,6 @@ export type IActions =
   | ActionType<typeof clearTraps>
   | ActionType<typeof lockTraps>
   | ActionType<typeof setWord>
-  | ActionType<typeof setTrapCount>;
+  | ActionType<typeof setTrapCount>
+  | ActionType<typeof setScore>
+  | ActionType<typeof setTrapsEditable>;

@@ -18,10 +18,13 @@ export const TeamUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
   if (!teamNumber) {
     return <div>Error</div>;
   }
+  const points = trapwordsData.teamData[teamNumber].score;
   return (
     <div className="d-flex flex-column pt-2">
       <div className="p-2">
-        <p className="text-center h2">Team {teamNumber}</p>
+        <p className="text-center h2">
+          Team {teamNumber} ({points} points)
+        </p>
         <hr />
         <div className="d-flex flex-row">
           {Object.keys(trapwordsData.teamData)
@@ -36,6 +39,7 @@ export const TeamUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                       {teamData.word?.toUpperCase()}
                     </div>
                   </div>
+                  <hr />
                   <div>Write traps for this word below:</div>
                   {[...Array(teamData.trapCount)].map((a, i) => {
                     const word = teamData.traps[teamNumber]?.[i];
@@ -56,6 +60,9 @@ export const TeamUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                       />
                     );
                   })}
+                  <div>
+                    Team {targetTeam} has {teamData.score} points.
+                  </div>
                 </div>
               );
             })}

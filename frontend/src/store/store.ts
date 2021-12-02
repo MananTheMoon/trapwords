@@ -9,6 +9,7 @@ import {
   addTrap,
   clearTraps,
   IActions,
+  setScore,
   setTrapCount,
   setWord,
   updateGameData,
@@ -19,6 +20,7 @@ import _ from "lodash";
 export interface ITrapwordsData {
   teamData: {
     [key: string]: {
+      score: number;
       word?: string;
       trapCount: number;
       traps: {
@@ -141,6 +143,22 @@ function game(state: IState = emptyStore, action: IActions): IState {
       return {
         ...state,
         trapwordsData: updateData2,
+      };
+    case getType(setScore):
+      const updateData3 = {
+        ...state.trapwordsData,
+        teamData: {
+          ...state.trapwordsData.teamData,
+          [action.payload.team]: {
+            ...state.trapwordsData.teamData[action.payload.team],
+            score: action.payload.score,
+          },
+        },
+      };
+      state.socket?.emit("updateGameData", updateData3);
+      return {
+        ...state,
+        trapwordsData: updateData3,
       };
     default:
       return state;

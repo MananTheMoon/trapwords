@@ -4,7 +4,13 @@ import { IState, ITrapwordsData } from "../store/store";
 import { Socket } from "socket.io-client";
 import { TrapwordInput } from "../components/TrapwordInput";
 import { GameUpdater } from "../components/GameUpdater";
-import { addTrap, clearTraps, setTrapCount, setWord } from "../store/actions";
+import {
+  addTrap,
+  clearTraps,
+  setScore,
+  setTrapCount,
+  setWord,
+} from "../store/actions";
 import { Button } from "react-bootstrap";
 
 interface ITeamProps {
@@ -52,6 +58,22 @@ export const AdminUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                   />
                 </div>
                 <div className="d-flex flex-row">
+                  Set Score:
+                  <input
+                    value={teamData.score}
+                    onChange={(e) => {
+                      if (!isNaN(Number(e.target.value))) {
+                        dispatch(
+                          setScore({
+                            team: targetTeam,
+                            score: Number(e.target.value),
+                          })
+                        );
+                      }
+                    }}
+                  />
+                </div>
+                <div className="d-flex flex-row">
                   <div>Trap Count:</div>
                   <div className="w-25">
                     <input
@@ -71,6 +93,9 @@ export const AdminUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                   </div>
                 </div>
                 <hr />
+                <div className="d-flex flex-row justify-content-center">
+                  <h3>{teamData.score} points</h3>
+                </div>
                 {Object.keys(teamData.traps).map((fromTeam) => {
                   return (
                     <div>

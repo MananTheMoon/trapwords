@@ -27,6 +27,7 @@ let gameData = {
   teamData: {
     "1": {
       word: "start",
+      score: 0,
       trapCount: 3,
       traps: {
         "2": {
@@ -42,6 +43,7 @@ let gameData = {
     "2": {
       word: "happiness",
       trapCount: 3,
+      score: 0,
       traps: {
         "3": {
           1: "interest",
@@ -52,6 +54,7 @@ let gameData = {
     "3": {
       word: "cool",
       trapCount: 3,
+      score: 0,
       traps: {
         "2": {
           1: "interest",
@@ -62,6 +65,7 @@ let gameData = {
     "4": {
       word: "interest",
       trapCount: 3,
+      score: 0,
       traps: {
         "3": {
           1: "cool",
