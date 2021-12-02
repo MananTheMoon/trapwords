@@ -6,10 +6,11 @@ interface ITrapwordInput {
 }
 
 export const TrapwordInput = ({ word, onChange }: ITrapwordInput) => {
+  console.log("The word to show is....");
   return (
     <div className="p-2">
       <input
-        value={word}
+        value={word || ""}
         onChange={(e) => {
           console.log("Dis value changed somehow??");
           onChange(e.target.value);
