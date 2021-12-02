@@ -10,8 +10,15 @@ export const addTrap = createAction("ADD_TRAP")<{
   index: number;
   word: string;
 }>();
+export const clearTraps = createAction("CLEAR_TRAPS")<void>();
+export const lockTraps = createAction("LOCK_TRAPS")<void>();
+export const setWord =
+  createAction("SET_WORD")<{ team: string; word: string }>();
 
 export type IActions =
   | ActionType<typeof addSocket>
   | ActionType<typeof updateGameData>
-  | ActionType<typeof addTrap>;
+  | ActionType<typeof addTrap>
+  | ActionType<typeof clearTraps>
+  | ActionType<typeof lockTraps>
+  | ActionType<typeof setWord>;

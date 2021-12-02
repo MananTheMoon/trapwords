@@ -3,7 +3,7 @@ const app = express();
 const http = require('http');
 const server = http.createServer(app);
 const { Server } = require("socket.io");
-
+const _ = require("lodash")
 // TODO (Manan) - Make this cors stuff work on heroku app
 const io = new Server(server, {cors: {
   origin: 'http://localhost:3000'
@@ -72,10 +72,10 @@ let gameData = {
   },
 };
 
-const sendGameData = async (socket = null) => {
-  if (socket) {
+const sendGameData = async (excludeSocket = null) => {
+  if (excludeSocket) {
     console.log("Sending GameData to most");
-    socket.broadcast.emit("gameData", gameData);
+    excludeSocket.broadcast.emit("gameData", gameData);
   } else {
     console.log("Sending Game Data to all");
     io.emit("gameData", gameData);
@@ -83,8 +83,8 @@ const sendGameData = async (socket = null) => {
 };
 
 io.on("connection", (socket) => {
-  console.log("New client connected");
-  sendGameData();
+  console.log("New client connected. Sending initial data");
+  io.emit("gameData", gameData);
 
   if (interval) {
     clearInterval(interval);
@@ -93,6 +93,28 @@ io.on("connection", (socket) => {
   socket.on("updateGameData", (newData) => {
     console.log("One client wants to update game data!")
     gameData = newData
+    sendGameData(socket)
+  })
+  socket.on("addTrap", (payload) => {
+    console.log("Someone added a trap!")
+    const dataToMerge = {
+      teamData: {
+        [payload.targetTeam]: {
+          traps: {
+            [payload.fromTeam]: {
+              [payload.index]: payload.word,
+            },
+          },
+        },
+      },
+    };
+    gameData = _.merge(
+      dataToMerge,
+      gameData
+    )
+    gameData.teamData[payload.targetTeam].traps[
+      payload.fromTeam
+    ][payload.index] = payload.word;
     sendGameData(socket)
   })
   

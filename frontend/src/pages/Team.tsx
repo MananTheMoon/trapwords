@@ -41,6 +41,7 @@ export const TeamUnconnected = ({ socket, trapwordsData }: ITeamProps) => {
                     const word = teamData.traps[teamNumber]?.[i];
                     return (
                       <TrapwordInput
+                        key={`${targetTeam}-${teamNumber}-${i}`}
                         word={word}
                         onChange={(newWord) => {
                           dispatch(

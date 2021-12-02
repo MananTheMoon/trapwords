@@ -4,7 +4,13 @@ import {
 } from "redux";
 import { Socket, io } from "socket.io-client";
 import { getType } from "typesafe-actions";
-import { addSocket, addTrap, IActions, updateGameData } from "./actions";
+import {
+  addSocket,
+  addTrap,
+  clearTraps,
+  IActions,
+  updateGameData,
+} from "./actions";
 import { server_url } from "../consts";
 import _ from "lodash";
 
@@ -36,6 +42,7 @@ const emptyStore: IState = {
 function game(state: IState = emptyStore, action: IActions): IState {
   switch (action.type) {
     case getType(addSocket):
+      console.log("ADDING SOCKET ONCE?!");
       return {
         ...state,
         socket: action.payload,
@@ -60,8 +67,7 @@ function game(state: IState = emptyStore, action: IActions): IState {
         action.payload.fromTeam
       ][action.payload.index] = action.payload.word;
       if (state.socket) {
-        // TODO (Manan) - Move socket emitter elsewhere
-        state.socket?.emit("updateGameData", updatedTrapwordsData);
+        state.socket?.emit("addTrap", action.payload);
       }
 
       return {
@@ -69,10 +75,31 @@ function game(state: IState = emptyStore, action: IActions): IState {
         trapwordsData: updatedTrapwordsData,
       };
     case getType(updateGameData):
-      console.log("New data payload!!", action.payload);
       return {
         ...state,
         trapwordsData: action.payload,
+      };
+    case getType(clearTraps):
+      console.log("Clearing traps!!");
+      const newTrapWordsData: ITrapwordsData = {
+        ...state.trapwordsData,
+        teamData: Object.keys(state.trapwordsData.teamData).reduce(
+          (acc, key) => {
+            return {
+              ...acc,
+              [key]: {
+                ...state.trapwordsData.teamData[key],
+                traps: {},
+              },
+            };
+          },
+          {}
+        ),
+      };
+      state.socket?.emit("updateGameData", newTrapWordsData);
+      return {
+        ...state,
+        trapwordsData: newTrapWordsData,
       };
     default:
       return state;
@@ -81,7 +108,8 @@ function game(state: IState = emptyStore, action: IActions): IState {
 
 export const createStore = () => {
   const store = reduxCreateStore(game);
-  const socket = io(server_url).connect();
+  console.log("STore create ahoy");
+  const socket = io(server_url);
   store.dispatch(addSocket(socket));
   return store;
 };
